@@ -1,0 +1,28 @@
+menu "IMP Project configuration"
+
+    config START_ANIMATION_ENABLED
+        bool "play animation on startup"
+        default true
+
+    config SCREEN_SWITCH_INTERVAL_SECONDS
+        int "[s] screen switching interval"
+        range 1 10
+        default 5
+
+	config SSD1306_SCL_GPIO
+		int "ssd1306 display SCL (clock) GPIO number"
+		default 16
+
+	config SSD1306_SDA_GPIO
+		int "ssd1306 display SDA (data) GPIO number"
+		default 17
+
+	config SHT31_SCL_GPIO
+		int "sht-31 senzor SCL (clock) GPIO number"
+		default 25
+
+	config SHT31_SDA_GPIO
+		int "sht-31 senzor SDA (data) GPIO number"
+		default 26
+
+endmenu
