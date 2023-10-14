@@ -9,20 +9,38 @@ menu "IMP Project configuration"
         range 1 10
         default 5
 
-	config SSD1306_SCL_GPIO
-		int "ssd1306 display SCL (clock) GPIO number"
-		default 16
+    menu "SSD1306 display configuration"
 
-	config SSD1306_SDA_GPIO
-		int "ssd1306 display SDA (data) GPIO number"
-		default 17
+        config SSD1306_SCL_GPIO
+            int "SCL (clock) GPIO number"
+            default 17
 
-	config SHT31_SCL_GPIO
-		int "sht-31 senzor SCL (clock) GPIO number"
-		default 25
+        config SSD1306_SDA_GPIO
+            int "SDA (data) GPIO number"
+            default 16
 
-	config SHT31_SDA_GPIO
-		int "sht-31 senzor SDA (data) GPIO number"
-		default 26
+        config SSD1306_CLK_SPEED
+            int "[Hz] clock speed"
+            range 1 400000
+            default 200000
+
+    endmenu
+
+    menu "SHT-31 senzor configuration"
+
+        config SHT31_SCL_GPIO
+            int "SCL (clock) GPIO number"
+            default 25
+
+        config SHT31_SDA_GPIO
+            int "SDA (data) GPIO number"
+            default 26
+
+        config SHT31_CLK_SPEED
+            int "[Hz] clock speed"
+            range 1 1000000
+            default 500000
+
+    endmenu
 
 endmenu
