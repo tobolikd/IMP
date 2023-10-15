@@ -1,6 +1,7 @@
 #ifndef IMP_I2C_UTILS_H
 #define IMP_I2C_UTILS_H
 
+#include "esp_err.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -21,14 +22,22 @@
 
 #define I2C_TIME_WAIT MILI_SECONDS(10)
 
-void i2c_init(i2c_port_t port, int scl, int sda, uint32_t clk_speed);
+typedef struct DeviceConfig {
+    i2c_port_t port;
+    uint8_t address;
+    int scl;
+    int sda;
+    uint32_t clk_speed;
+} dev_conf_t;
 
-void i2c_send_data(i2c_port_t port, uint8_t address, uint8_t *data,
+void i2c_init(dev_conf_t device);
+
+esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data,
                    uint8_t len);
 
-void i2c_read_data(i2c_port_t port, uint8_t address, uint8_t *data,
+esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data,
                    uint8_t len);
 
-void i2c_clean(i2c_port_t port);
+void i2c_clean(dev_conf_t device);
 
 #endif // IMP_I2C_UTILS_H
