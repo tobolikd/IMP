@@ -15,8 +15,8 @@ void app_main(void) {
     dev_conf_t sht31 = {.address = SHT31_ADDR,
                         .port = SHT31_PORT,
                         .scl = CONFIG_SHT31_SCL_GPIO,
-                        .sda = CONFIG_SSD1306_SDA_GPIO,
-                        .clk_speed = CONFIG_SSD1306_CLK_SPEED};
+                        .sda = CONFIG_SHT31_SDA_GPIO,
+                        .clk_speed = CONFIG_SHT31_CLK_SPEED};
     // init i2c for both devices
     i2c_init(ssd1306);
     i2c_init(sht31);

@@ -30,9 +30,9 @@ esp_err_t ssd1306_write_buffer(dev_conf_t device, display_buff buf) {
 
     // TODO reset address
 
-    // set control byte to command stream
+    // set control byte to data stream
     data[0] = OLED_CONTROL_DATA_STREAM;
-    memcpy(data, buf, DISPLAY_BUFF_SIZE);
+    memcpy(data + 1, buf, DISPLAY_BUFF_SIZE);
 
     esp_err_t ret = i2c_send_data(device, data, DISPLAY_BUFF_SIZE + 1);
 

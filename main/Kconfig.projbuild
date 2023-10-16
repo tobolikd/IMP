@@ -22,7 +22,7 @@ menu "IMP Project configuration"
         config SSD1306_CLK_SPEED
             int "[Hz] clock speed"
             range 1 400000
-            default 200000
+            default 400000
 
     endmenu
 

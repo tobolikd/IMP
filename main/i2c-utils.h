@@ -9,6 +9,7 @@
 #include "esp_log.h"
 #include "hal/i2c_types.h"
 #include "portmacro.h"
+#include <stddef.h>
 #include <stdint.h>
 
 // assigned device ports
@@ -35,10 +36,10 @@ typedef struct DeviceConfig {
 void i2c_init(dev_conf_t device);
 
 esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data,
-                   uint8_t len);
+                   size_t len);
 
 esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data,
-                   uint8_t len);
+                   size_t len);
 
 void i2c_clean(dev_conf_t device);
 

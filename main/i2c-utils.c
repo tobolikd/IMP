@@ -5,6 +5,7 @@
 #include "hal/i2c_types.h"
 #include "portmacro.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 static const char *tag = "I2C";
@@ -25,12 +26,8 @@ void i2c_init(dev_conf_t device) {
     ESP_LOGI(tag, "inicialization done");
 }
 
-esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, uint8_t len) {
+esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, size_t len) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-
-    for (int i = 0; i<len; i++) {
-        ESP_LOGI(tag, "data: 0x%x", data[i]);
-    }
 
     i2c_master_start(cmd);
     // set address and mode
@@ -44,11 +41,11 @@ esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, uint8_t len) {
         return ret;
     }
     i2c_cmd_link_delete(cmd);
-    ESP_LOGI(tag, "sent %d byte(s) of data", len);
+    ESP_LOGI(tag, "sent %zu byte(s) of data", len);
     return ESP_OK;
 }
 
-esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, uint8_t len) {
+esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, size_t len) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
     i2c_master_start(cmd);
@@ -65,7 +62,7 @@ esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, uint8_t len) {
     }
 
     i2c_cmd_link_delete(cmd);
-    ESP_LOGI(tag, "read %d byte(s) of data", len);
+    ESP_LOGI(tag, "read %zu byte(s) of data", len);
     return ESP_OK;
 }
 
