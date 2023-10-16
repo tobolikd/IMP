@@ -28,6 +28,10 @@ void i2c_init(dev_conf_t device) {
 esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, uint8_t len) {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
+    for (int i = 0; i<len; i++) {
+        ESP_LOGI(tag, "data: 0x%x", data[i]);
+    }
+
     i2c_master_start(cmd);
     // set address and mode
     i2c_master_write_byte(cmd, (device.address << 1) | I2C_MASTER_WRITE, true);
@@ -41,6 +45,7 @@ esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, uint8_t len) {
     }
     i2c_cmd_link_delete(cmd);
     ESP_LOGI(tag, "sent %d byte(s) of data", len);
+    return ESP_OK;
 }
 
 esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, uint8_t len) {
@@ -61,6 +66,7 @@ esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, uint8_t len) {
 
     i2c_cmd_link_delete(cmd);
     ESP_LOGI(tag, "read %d byte(s) of data", len);
+    return ESP_OK;
 }
 
 void i2c_clean(dev_conf_t device) {

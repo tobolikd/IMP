@@ -15,7 +15,7 @@ esp_err_t ssd1306_send_commands(dev_conf_t device, uint8_t *commands,
 
     // set control byte to command stream
     data[0] = OLED_CONTROL_COMMAND_STREAM;
-    memcpy(data, commands, len);
+    memcpy(data + 1, commands, len);
 
     esp_err_t ret = i2c_send_data(device, data, len + 1);
 
@@ -38,5 +38,4 @@ esp_err_t ssd1306_write_buffer(dev_conf_t device, display_buff buf) {
 
     free(data);
     return ret;
-
 }

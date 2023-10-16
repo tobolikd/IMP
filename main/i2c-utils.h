@@ -8,6 +8,7 @@
 #include "driver/i2c.h"
 #include "esp_log.h"
 #include "hal/i2c_types.h"
+#include "portmacro.h"
 #include <stdint.h>
 
 // assigned device ports
@@ -19,6 +20,7 @@
 #define SSD1306_ADDR 0x3C
 
 #define MILI_SECONDS(t) (t / portTICK_PERIOD_MS)
+#define SECONDS(t) (1000 * t / portTICK_PERIOD_MS)
 
 #define I2C_TIME_WAIT MILI_SECONDS(10)
 
