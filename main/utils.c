@@ -134,7 +134,8 @@ void add_graph_data(graph_data_t *data, int16_t newValue) {
         data->min = newValue;
 
     if (data->full) {
-        memmove(&data->data[0], &data->data[1], (MAX_GRAPH_DATA - 1) * sizeof(int16_t));
+        memmove(&data->data[0], &data->data[1],
+                (MAX_GRAPH_DATA - 1) * sizeof(int16_t));
         data->data[MAX_GRAPH_DATA - 1] = newValue;
         return;
     }
@@ -191,4 +192,19 @@ void write_to_buff(display_buff *buff, const uint8_t *data, uint32_t xPos,
 
 void set_pixel(display_buff *buff, uint8_t x, uint8_t y) {
     (*buff)[y / DISPLAY_PAGE_HEIGHT][x] |= 1 << (y % DISPLAY_PAGE_HEIGHT);
+}
+void play_animation(dev_conf_t display) {
+    display_buff buff;
+    memset(buff, 0, DISPLAY_BUFF_SIZE);
+
+    for (uint8_t i = 0; i < ANIMATION_FRAMES; i++) {
+        write_to_buff(&buff, temperature_animation[i], ANIMATION_TEMP_START_X,
+                      ANIMATION_START_PAGE, GLYPH_16x24_WIDTH,
+                      GLYPH_16x24_HEIGHT / DISPLAY_PAGE_HEIGHT);
+        write_to_buff(&buff, humidity_animation[i], ANIMATION_HUMI_START_X,
+                      ANIMATION_START_PAGE, GLYPH_16x24_WIDTH,
+                      GLYPH_16x24_HEIGHT / DISPLAY_PAGE_HEIGHT);
+        ssd1306_write_buffer(display, buff);
+        vTaskDelay(MILI_SECONDS(ANIMATION_FRAME_DELAY_MS));
+    }
 }

@@ -26,6 +26,7 @@ void app_main(void) {
 
 #if CONFIG_START_ANIMATION_ENABLED
     // TODO play animation
+    play_animation(ssd1306);
 #endif
 
     while (true) {

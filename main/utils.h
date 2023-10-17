@@ -60,6 +60,8 @@ void set_pixel(display_buff *buff, uint8_t x, uint8_t y);
 void set_metric_value(display_buff *buff, uint32_t value);
 void draw_graph(display_buff *buff, graph_data_t *data);
 
+void play_animation(dev_conf_t display);
+
 void show_temperature_info(dev_conf_t display, dev_conf_t senzor);
 void show_humidity_info(dev_conf_t display, dev_conf_t senzor);
 
