@@ -30,7 +30,7 @@ void app_main(void) {
 
     while (true) {
         show_temperature_info(ssd1306, sht31);
-        vTaskDelay(SECONDS(CONFIG_SCREEN_SWITCH_INTERVAL_SECONDS));
+        vTaskDelay(MILI_SECONDS(200));
 #if false
         show_humidity_info(ssd1306, sht31);
         vTaskDelay(SECONDS(CONFIG_SCREEN_SWITCH_INTERVAL_SECONDS));

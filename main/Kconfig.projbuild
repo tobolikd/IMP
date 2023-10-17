@@ -13,11 +13,11 @@ menu "IMP Project configuration"
 
         config SSD1306_SCL_GPIO
             int "SCL (clock) GPIO number"
-            default 17
+            default 16
 
         config SSD1306_SDA_GPIO
             int "SDA (data) GPIO number"
-            default 16
+            default 17
 
         config SSD1306_CLK_SPEED
             int "[Hz] clock speed"
