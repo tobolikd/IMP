@@ -193,11 +193,11 @@ void add_graph_data(graph_data_t *data, float newValue) {
 
 void draw_graph(display_buff *buff, graph_data_t *data) {
     // verical axis
-    for (int i = GRAPH_AXIS_VERTICAL_START_Y; i < GRAPH_AXIS_VERTICAL_END_Y;
+    for (int i = GRAPH_AXIS_VERTICAL_START_Y; i <= GRAPH_AXIS_VERTICAL_END_Y;
          i++)
         set_pixel(buff, GRAPH_AXIS_VERTICAL_X, i);
     // horizontal axis
-    for (int i = GRAPH_AXIS_HORIZONTAL_START_X; i < GRAPH_AXIS_HORIZONTAL_END_X;
+    for (int i = GRAPH_AXIS_HORIZONTAL_START_X; i <= GRAPH_AXIS_HORIZONTAL_END_X;
          i++)
         set_pixel(buff, i, GRAPH_AXIS_HORIZONTAL_Y);
 

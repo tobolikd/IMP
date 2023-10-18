@@ -56,10 +56,10 @@ void add_graph_data(graph_data_t *data, float newValue);
  */
 void ssd1306_turn_on(dev_conf_t device);
 
+// functions for modifying the display buff
 void write_to_buff(display_buff *buff, const uint8_t *data, uint32_t xPos,
                    uint32_t page, uint32_t width, uint32_t pageCount);
 void set_pixel(display_buff *buff, uint8_t x, uint8_t y);
-
 void set_metric_value(display_buff *buff, int16_t whole_part, uint8_t fraction);
 void draw_graph(display_buff *buff, graph_data_t *data);
 
