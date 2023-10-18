@@ -26,7 +26,7 @@ menu "IMP Project configuration"
 
     endmenu
 
-    menu "SHT-31 senzor configuration"
+    menu "SHT-31 sensor configuration"
 
         config SHT31_SCL_GPIO
             int "SCL (clock) GPIO number"

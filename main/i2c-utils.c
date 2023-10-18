@@ -31,8 +31,8 @@ esp_err_t i2c_send_data(dev_conf_t device, uint8_t *data, size_t len) {
 
     i2c_master_start(cmd);
     // set address and mode
-    i2c_master_write_byte(cmd, (device.address << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_write(cmd, data, len, true);
+    i2c_master_write_byte(cmd, (device.address << 1) | I2C_MASTER_WRITE, I2C_MASTER_ACK);
+    i2c_master_write(cmd, data, len, I2C_MASTER_ACK);
     i2c_master_stop(cmd);
 
     esp_err_t ret = i2c_master_cmd_begin(device.port, cmd, I2C_TIME_WAIT);
@@ -50,9 +50,9 @@ esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, size_t len) {
 
     i2c_master_start(cmd);
     // set address and mode
-    i2c_master_write_byte(cmd, (device.address << 1) | I2C_MASTER_READ, true);
-    i2c_master_read(cmd, data, len - 1, true);
-    i2c_master_read(cmd, data, 1, false); // last read segment doesn't have ACK
+    i2c_master_write_byte(cmd, (device.address << 1) | I2C_MASTER_READ, I2C_MASTER_ACK);
+    i2c_master_read(cmd, data, len - 1, I2C_MASTER_ACK);
+    i2c_master_read(cmd, data + len - 1, 1, I2C_MASTER_LAST_NACK); // last read segment doesn't have ACK
     i2c_master_stop(cmd);
 
     esp_err_t ret = i2c_master_cmd_begin(device.port, cmd, I2C_TIME_WAIT);

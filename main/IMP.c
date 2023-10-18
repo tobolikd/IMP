@@ -1,6 +1,7 @@
 #include "freertos/FreeRTOS.h"
 #include "i2c-utils.h"
 #include "sdkconfig.h"
+#include "sht31.h"
 #include "ssd1306.h"
 #include "utils.h"
 #include <stdint.h>
@@ -23,19 +24,18 @@ void app_main(void) {
 
     // turn on ssd1306
     ssd1306_turn_on(ssd1306);
+    // init sht31
+    sht31_init(sht31);
 
 #if CONFIG_START_ANIMATION_ENABLED
-    // TODO play animation
     play_animation(ssd1306);
 #endif
 
     while (true) {
         show_temperature_info(ssd1306, sht31);
-        vTaskDelay(MILI_SECONDS(300));
-#if false
+        vTaskDelay(SECONDS(CONFIG_SCREEN_SWITCH_INTERVAL_SECONDS));
         show_humidity_info(ssd1306, sht31);
         vTaskDelay(SECONDS(CONFIG_SCREEN_SWITCH_INTERVAL_SECONDS));
-#endif
     }
 
     // clean i2c
