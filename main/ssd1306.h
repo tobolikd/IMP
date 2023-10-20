@@ -53,7 +53,6 @@
 #define OLED_SET_CHARGE_PUMP 0x8d
 #define OLED_CHARGE_PUMP_ENABLE 0x14
 
-
 /**
  * display buffer type (for additional type checking)
  *
@@ -68,8 +67,19 @@ typedef uint8_t display_buff[8][128];
 #define DISPLAY_PAGE_WIDTH 128
 #define DISPLAY_PAGE_HEIGHT 8
 
+/**
+ * sends commands to display
+ *
+ * prefixes the data with command stream byte
+ */
 esp_err_t ssd1306_send_commands(dev_conf_t device, uint8_t *commands,
                                 uint8_t len);
+/**
+ * sends buffer as data to display (to actually show them, the display has to be
+ * initialized)
+ *
+ * prefixes the data with the data stream byte
+ */
 esp_err_t ssd1306_write_buffer(dev_conf_t device, display_buff buf);
 
 #endif // IMP_SSD1306_H

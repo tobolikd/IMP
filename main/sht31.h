@@ -2,10 +2,6 @@
 #define IMP_SHT31_H
 
 #include "i2c-utils.h"
-typedef struct {
-    float temperature;
-    float humidity;
-} sht31_data_t;
 
 // more options can be added from documentation (pg 10)
 // here are just default options used in the project
@@ -25,7 +21,19 @@ typedef struct {
 #define SHT31_HUMI_IDX 3
 #define SHT31_HUMI_CRC_IDX 5
 
+typedef struct {
+    float temperature;
+    float humidity;
+} sht31_data_t;
+
+/**
+ * measure temperature and humidity from sht31
+ */
 sht31_data_t sht31_get_data(dev_conf_t device);
+
+/**
+ * software reset sht31
+ */
 void sht31_init(dev_conf_t device);
 
 #endif // IMP_SHT31_H

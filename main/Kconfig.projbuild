@@ -6,7 +6,7 @@ menu "IMP Project configuration"
 
     config SCREEN_SWITCH_INTERVAL_SECONDS
         int "[s] screen switching interval"
-        range 1 10
+        range 1 600
         default 5
 
     menu "SSD1306 display configuration"

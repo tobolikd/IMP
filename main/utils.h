@@ -49,23 +49,75 @@ typedef struct GraphData {
     bool full;
 } graph_data_t;
 
+/**
+ * add graph data to graph data struct
+ *
+ * update minimum and maximum values
+ */
 void add_graph_data(graph_data_t *data, float newValue);
 
 /**
- * initialize ssd1306 display settings
+ * initialize ssd1306 display settings and turn display on
  */
 void ssd1306_turn_on(dev_conf_t device);
 
-// functions for modifying the display buff
+/**
+ * writes rectangle area data to display buffer from the starting x position
+ * and page
+ *
+ * xPos - pixel coord where the data should be written
+ * page - page of the buffer to start writing
+ * width - width of data on the screen
+ * pageCount - height of data in pages
+ */
 void write_to_buff(display_buff *buff, const uint8_t *data, uint32_t xPos,
                    uint32_t page, uint32_t width, uint32_t pageCount);
+
+/**
+ * sets display pixel to high
+ */
 void set_pixel(display_buff *buff, uint8_t x, uint8_t y);
+
+/**
+ * sets metric numerical value to display buffer
+ * removes leading zeros
+ *
+ * writes METRIC_MAX_DATA - 1 digits of the whole part or minus sign and
+ * METRIC_MAX_DATA - 2 digits of the whole part
+ *
+ * fraction is limited to one digit
+ */
 void set_metric_value(display_buff *buff, int16_t whole_part, uint8_t fraction);
+
+/**
+ * sets graph data to buffer
+ *
+ * graph has horizontal and vertical axis
+ *
+ * vertical axis has integer lower and upper bounds which are minimum and
+ * maximum values in graph data floored and ceiled respectively
+ *
+ * maps the graph data between the 2 bounds
+ *
+ * NOTE: bounds dont have support for negative values so eg. -15 is displayed as
+ * 15, but the graph data are shown correctly
+ */
 void draw_graph(display_buff *buff, graph_data_t *data);
 
+/**
+ * plays simple startup animation with temperature and humidity icons with "IMP"
+ * text in the middle
+ */
 void play_animation(dev_conf_t display);
 
+/**
+ * measures temperature, updates data in graph and displays everything on screen
+ */
 void show_temperature_info(dev_conf_t display, dev_conf_t sensor);
+
+/**
+ * measures humidity, updates data in graph and displays everything on screen
+ */
 void show_humidity_info(dev_conf_t display, dev_conf_t sensor);
 
 #endif // IMP_UTILS_H

@@ -2,6 +2,17 @@
 #define IMP_GLYPHS_H
 
 #include <stdint.h>
+/**
+ * this file contains raw data for different glyphs
+ *
+ * it is array of bytes, where lsb is top bit/pixel on display
+ * [0]|[1]|...
+ * ---|---|---
+ * LSB|LSB|...
+ *  . | . |
+ *  . | . |
+ * MSB|MSB|...
+ */
 
 // clang-format off
 #define GLYPH_8x8_WIDTH 8

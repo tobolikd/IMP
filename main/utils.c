@@ -11,6 +11,7 @@
 #include <string.h>
 
 static const char *tag = "utils (IMP)";
+static display_buff buff;
 
 void ssd1306_turn_on(dev_conf_t device) {
     // software startup sequence from documentation (Application Note pg 5)
@@ -38,17 +39,12 @@ void ssd1306_turn_on(dev_conf_t device) {
 }
 
 void show_temperature_info(dev_conf_t display, dev_conf_t sensor) {
-    static display_buff buff;
     static graph_data_t graph = {
-        .data = {0},
-        .min = FLT_MAX, // needs to be overwritten by first value
-        .max = FLT_MIN,
-        .idx = 0,
-        .full = false};
+        .data = {0}, .min = FLT_MAX, .max = FLT_MIN, .idx = 0, .full = false};
     memset(buff, 0x00, DISPLAY_BUFF_SIZE);
-    // get info
+    // get temperature
     float temperature = sht31_get_data(sensor).temperature;
-    uint8_t fraction = (uint8_t)(fabs(temperature - (int16_t)temperature) * 10);
+    uint8_t fraction = (uint8_t)roundf(fabs(temperature - (int16_t)temperature) * 10);
 
     // set temp value
     set_metric_value(&buff, (int16_t)temperature, fraction);
@@ -76,14 +72,13 @@ void show_temperature_info(dev_conf_t display, dev_conf_t sensor) {
 }
 
 void show_humidity_info(dev_conf_t display, dev_conf_t sensor) {
-    static display_buff buff;
     static graph_data_t graph = {
         .data = {0}, .min = FLT_MAX, .max = FLT_MIN, .idx = 0, .full = false};
     memset(buff, 0x00, DISPLAY_BUFF_SIZE);
 
     // get humidity
     float humidity = sht31_get_data(sensor).humidity;
-    uint8_t fraction = (uint8_t)(fabs(humidity - (int16_t)humidity) * 10);
+    uint8_t fraction = (uint8_t)roundf(fabs(humidity - (int16_t)humidity) * 10);
 
     // set humidity value
     set_metric_value(&buff, (int16_t)humidity, fraction);
@@ -116,11 +111,15 @@ void set_metric_value(display_buff *buff, int16_t whole_part,
     uint8_t const *data[METRIC_MAX_DATA] = {NULL};
 
     // set fraction part
+    if (fraction > 9) {
+        ESP_LOGW(tag, "only first digit of fraction will be displayed");
+        fraction /= 10;
+    }
     data[0] = num16x24[fraction];
     data_len++;
 
     // parse value digit by digit
-    uint32_t digit_modulo = 10;
+    uint8_t const digit_modulo = 10;
     for (uint8_t i = data_len; i < METRIC_MAX_DATA; i++) {
         // set current digit
         data[i] = num16x24[whole_part % (digit_modulo)];
@@ -175,6 +174,7 @@ void update_min_max(graph_data_t *data) {
 
 void add_graph_data(graph_data_t *data, float newValue) {
     if (data->full) {
+        // shift data to left
         memmove(&data->data[0], &data->data[1],
                 (MAX_GRAPH_DATA - 1) * sizeof(float));
         data->data[MAX_GRAPH_DATA - 1] = newValue;
@@ -197,15 +197,15 @@ void draw_graph(display_buff *buff, graph_data_t *data) {
          i++)
         set_pixel(buff, GRAPH_AXIS_VERTICAL_X, i);
     // horizontal axis
-    for (int i = GRAPH_AXIS_HORIZONTAL_START_X; i <= GRAPH_AXIS_HORIZONTAL_END_X;
-         i++)
+    for (int i = GRAPH_AXIS_HORIZONTAL_START_X;
+         i <= GRAPH_AXIS_HORIZONTAL_END_X; i++)
         set_pixel(buff, i, GRAPH_AXIS_HORIZONTAL_Y);
 
     int16_t data_range = fabs(ceil(data->max) - floor(data->min));
     int16_t lower_bound;
     int16_t upper_bound;
     if (data_range < GRAPH_DATA_MIN_RANGE) {
-        // if data are too close to each other center them
+        // if data are too close to each other set minimum margin
         float margin = (GRAPH_DATA_MIN_RANGE - data_range) / 2.;
         data_range = GRAPH_DATA_MIN_RANGE;
         lower_bound = data->min - margin;
@@ -215,7 +215,7 @@ void draw_graph(display_buff *buff, graph_data_t *data) {
         upper_bound = ceil(data->max);
     }
 
-    // set lower bound (nos support for negative numbers)
+    // set lower bound (no support for negative numbers)
     write_to_buff(buff, num8x8[(abs(lower_bound) % 100) / 10],
                   GRAPH_LOWER_BOUND_START_X, GRAPH_LOWER_BOUND_START_PAGE,
                   GLYPH_8x8_WIDTH, GLYPH_8x8_HEIGHT / DISPLAY_PAGE_HEIGHT);
@@ -224,7 +224,7 @@ void draw_graph(display_buff *buff, graph_data_t *data) {
                   GRAPH_LOWER_BOUND_START_PAGE, GLYPH_8x8_WIDTH,
                   GLYPH_8x8_HEIGHT / DISPLAY_PAGE_HEIGHT);
 
-    // set upper bound
+    // set upper bound (also no negative numbers)
     write_to_buff(buff, num8x8[(abs(upper_bound) % 100) / 10],
                   GRAPH_UPPER_BOUND_START_X, GRAPH_UPPER_BOUND_START_PAGE,
                   GLYPH_8x8_WIDTH, GLYPH_8x8_HEIGHT / DISPLAY_PAGE_HEIGHT);
@@ -269,6 +269,7 @@ void play_animation(dev_conf_t display) {
                   ANIMATION_START_PAGE, GLYPH_16x24_WIDTH,
                   GLYPH_16x24_HEIGHT / DISPLAY_PAGE_HEIGHT);
 
+    // loop through icons animation
     for (uint8_t i = 0; i < ANIMATION_FRAMES; i++) {
         write_to_buff(&buff, temperature_animation[i], ANIMATION_TEMP_START_X,
                       ANIMATION_START_PAGE, GLYPH_16x24_WIDTH,

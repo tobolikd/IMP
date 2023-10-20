@@ -68,5 +68,4 @@ esp_err_t i2c_read_data(dev_conf_t device, uint8_t *data, size_t len) {
 
 void i2c_clean(dev_conf_t device) {
     ESP_ERROR_CHECK(i2c_driver_delete(device.port));
-    ESP_LOGI(tag, "cleaned");
 }

@@ -10,6 +10,11 @@ static const char tag[] = "sht31";
 #define CRC_POLYNOMIAL 0x131
 #define CRC_INIT 0xff
 #define MSB_BIT_MASK (1 << 7)
+/**
+ * computes crc check for SHT31_VALUE_LENGTH bytes of data
+ *
+ * https://en.wikipedia.org/wiki/Cyclic_redundancy_check
+ */
 uint8_t crc_check(uint8_t *data) {
     uint8_t crc = CRC_INIT;
 
@@ -41,8 +46,9 @@ sht31_data_t sht31_get_data(dev_conf_t device) {
 
     i2c_read_data(device, data, SHT31_DATA_LENGTH);
 
+    // convert measured data to float
     float temperature_data =
-        (float)((data[SHT31_TEMP_IDX] * 256) + data[SHT31_TEMP_IDX + 1]);
+        (float)((data[SHT31_TEMP_IDX] << 8) + data[SHT31_TEMP_IDX + 1]);
     float humidity_data =
         (float)((data[SHT31_HUMI_IDX] << 8) + data[SHT31_HUMI_IDX + 1]);
 
