@@ -3,5 +3,4 @@
 *.fdb_latexmk
 *.log
 *.out
-*.tex
 *.toc

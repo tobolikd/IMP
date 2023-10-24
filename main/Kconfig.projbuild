@@ -2,7 +2,7 @@ menu "IMP Project configuration"
 
     config START_ANIMATION_ENABLED
         bool "play animation on startup"
-        default true
+        default y
 
     config SCREEN_SWITCH_INTERVAL_SECONDS
         int "[s] screen switching interval"
