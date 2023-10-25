@@ -34,6 +34,21 @@ uint8_t crc_check(uint8_t *data) {
 }
 
 sht31_data_t sht31_get_data(dev_conf_t device) {
+/** just for demonstration purposes **/
+#ifdef CONFIG_DISPLAY_TEST
+    static uint8_t test_data_idx = 0;
+    static float test_values[] = {0,   -12.3, 45.6, 78.9, 99.9, -99.9,
+                                  -10, 0,     10,   20,   30,   40,
+                                  50,  60,    70,   80,   90};
+    sht31_data_t test_data = {
+        .temperature = test_values[test_data_idx / 2],
+        .humidity = test_values[test_data_idx / 2],
+    };
+    test_data_idx++;
+    test_data_idx = test_data_idx % (2 * sizeof(test_values) / sizeof(float));
+    return test_data;
+#endif
+
     uint8_t command[] = {SHT31_CLK_STRETCHING_DISABLED,
                          SHT31_REPEATABILITY_MEDIUM};
 
@@ -58,7 +73,8 @@ sht31_data_t sht31_get_data(dev_conf_t device) {
         .humidity = 100 * humidity_data / ((1 << 16) - 1),
     };
 
-    ESP_LOGI(tag, "temperature: %f, humidity: %f", ret.temperature, ret.humidity);
+    ESP_LOGI(tag, "temperature: %f, humidity: %f", ret.temperature,
+             ret.humidity);
     if (data[SHT31_TEMP_CRC_IDX] != crc_check(&data[SHT31_TEMP_IDX]))
         ESP_LOGW(tag, "temperature is not correct");
     if (data[SHT31_HUMI_CRC_IDX] != crc_check(&data[SHT31_HUMI_IDX]))

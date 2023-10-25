@@ -1,5 +1,9 @@
 menu "IMP Project configuration"
 
+    config DISPLAY_TEST
+        bool "test display (show sample values showing display functionality)"
+        default n
+
     config START_ANIMATION_ENABLED
         bool "play animation on startup"
         default y
